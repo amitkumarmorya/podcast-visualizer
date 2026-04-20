@@ -1,0 +1,1 @@
+{"detail":[{"type":"value_error","loc":["body","script_file"],"msg":"Value error, Expected UploadFile, received: <class 'str'>","input":"Some random text","ctx":{"error":{}}}]}
