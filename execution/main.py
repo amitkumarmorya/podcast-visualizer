@@ -60,9 +60,6 @@ def api_process_script(
     results = process_podcast(text, brand_colors, num_outputs, design_style)
     return {"status": "success", "results": results}
 
-out_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "out")
-if os.path.exists(out_dir):
-    app.mount("/", StaticFiles(directory=out_dir, html=True), name="static")
 
 @app.post("/api/iterate-concept")
 def api_iterate_concept(
@@ -120,3 +117,8 @@ def api_save_to_drive(
         error_msg = f"{type(e).__name__}: {str(e)}"
         print(f"Error saving to drive: {error_msg}")
         return {"status": "error", "message": error_msg}
+
+# Mount static folder at the very end to prevent it from intercepting API paths
+out_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "out")
+if os.path.exists(out_dir):
+    app.mount("/", StaticFiles(directory=out_dir, html=True), name="static")
