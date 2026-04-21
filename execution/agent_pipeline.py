@@ -28,7 +28,7 @@ def run_agent_a(script_text: str, num_outputs: int = 5) -> str:
     prompt = f"{directive}\n\nInputs:\n- script_text: {script_text}\n\nOutput JSON strictly:"
     
     response = client.models.generate_content(
-        model='gemini-2.5-flash',
+        model='gemini-2.5-pro',
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
@@ -46,7 +46,7 @@ def run_agent_b(segment_json_str: str, design_style: str = "3D Minimalist") -> s
     prompt = f"{directive}\n\nInputs:\n- segment: {segment_json_str}\n\nOutput JSON strictly:"
     
     response = client.models.generate_content(
-        model='gemini-2.5-flash',
+        model='gemini-2.5-pro',
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
@@ -64,7 +64,7 @@ def run_agent_c(segment_json_str: str, brand_colors: str, feedback: str = "", de
     prompt = f"{directive}\n\nInputs:\n- concept: {segment_json_str}\n- brand_colors: {brand_colors}\n- additional_context: {feedback}\n\nOutput JSON strictly:"
     
     response = client.models.generate_content(
-        model='gemini-2.5-flash',
+        model='gemini-2.5-pro',
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",

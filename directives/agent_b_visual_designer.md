@@ -14,12 +14,10 @@ Return a strict JSON object with the following keys:
 - `prompt_for_generation` (string): An explicit prompt ready to be sent to an image generation API (Nanobanana). It MUST include instructions like "minimalist, clean lines, ample whitespace, premium, corporate aesthetic".
 
 ## Rules & Constraints
-## Rules & Constraints
-## Rules & Constraints
 1. Do NOT include any formatting like ` ```json ` – just the raw JSON text.
-2. The concepts must be visually engaging and strictly follow the assigned **{DESIGN_STYLE}** aesthetic. Avoid overly bare or boring designs. 
-3. The prompt should explicitly ask the image generator to leave negative space for a logo or text to be overlaid later (if applicable).
-4. Instruct the image generator specifically NOT to include any written text, letters, typography, or numbers in the image itself. If creating an infographic, emphasize that it must be "purely symbolic without any text labels". NEVER tell the image generator to write a specific word, title, or label.
+2. The concepts must be HIGHLY RELEVANT to the core message of the segment summary, visually engaging, and strictly follow the assigned **{DESIGN_STYLE}** aesthetic. Avoid overly bare, boring, or literal interpretations; focus on conceptual, symbolic, and premium representations.
+3. The prompt should explicitly ask the image generator to leave negative space for a logo or text to be overlaid later.
+4. ABSOLUTELY NO TEXT. Instruct the image generator specifically NOT to include any written text, letters, typography, words, or numbers in the image itself. If creating an infographic, emphasize that it must be "purely symbolic and abstract without any text labels". NEVER tell the image generator to write a specific word, title, or label. Include phrases like "completely devoid of text", "no words", "no letters" in the prompt.
 
 ## Example Output Expected
 {

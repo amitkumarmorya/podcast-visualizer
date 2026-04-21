@@ -17,6 +17,7 @@ export default function Home() {
   const [designStyle, setDesignStyle] = useState("3D Minimalist");
   const [overlaySelections, setOverlaySelections] = useState<Record<number, string>>({});
   const [isSavingToDriveIndex, setIsSavingToDriveIndex] = useState<number | null>(null);
+  const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
   
   const primaryBrandColor = brandColors.split(',')[0].trim() || '#111827';
 
@@ -194,7 +195,9 @@ export default function Home() {
         body: formData,
       });
       const data = await res.json();
-      setResults(data.results || []);
+      const newResults = data.results || [];
+      setResults(newResults);
+      setSelectedIndices(newResults.map((_: any, i: number) => i));
     } catch (e) {
       console.error(e);
       alert("Error processing script. Make sure FastAPI backend is running on port 8000.");
@@ -204,16 +207,29 @@ export default function Home() {
   };
 
   const handleGenerate = async () => {
+    if (selectedIndices.length === 0) {
+      alert("Please select at least one insight to generate an image for.");
+      return;
+    }
     setIsGenerating(true);
     try {
-      const prompts = results.map(r => r.review.refined_prompt);
+      const promptsToGen = selectedIndices.map(index => ({
+          prompt: results[index].review.refined_prompt,
+          originalIndex: index
+      }));
       const res = await fetch(`${API_BASE}/api/generate-images`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompts }),
+        body: JSON.stringify({ prompts: promptsToGen.map(p => p.prompt) }),
       });
       const data = await res.json();
-      setFinalImages(data.image_urls || []);
+      const urls = data.image_urls || [];
+      
+      const newFinalImages = Array(results.length).fill("");
+      promptsToGen.forEach((p, idx) => {
+          newFinalImages[p.originalIndex] = urls[idx] || "";
+      });
+      setFinalImages(newFinalImages);
     } catch (e) {
       console.error(e);
       alert("Error generating images.");
@@ -297,7 +313,7 @@ export default function Home() {
         )}
 
         {/* Phase 2: Review & Feedback */}
-        {results.length > 0 && finalImages.length === 0 && (
+        {results.length > 0 && !finalImages.some(url => url) && (
           <section className="space-y-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold">Suggested Visual Concepts</h2>
@@ -311,9 +327,24 @@ export default function Home() {
             </div>
             <div className="grid gap-6">
               {results.map((r, i) => (
-                <div key={i} className="card grid md:grid-cols-2 gap-8">
-                  <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-brand-muted">The Moment</span>
+                <div key={i} className={`card relative border-2 transition-all ${selectedIndices.includes(i) ? 'border-brand-accent shadow-lg shadow-brand-accent/20' : 'border-transparent opacity-60'}`}>
+                  <div className="absolute top-4 right-4 z-10 flex items-center gap-2 bg-brand-surface p-2 rounded-md shadow">
+                    <label className="text-sm font-medium cursor-pointer flex items-center gap-2">
+                        <input 
+                            type="checkbox" 
+                            checked={selectedIndices.includes(i)} 
+                            onChange={(e) => {
+                                if (e.target.checked) setSelectedIndices(prev => [...prev, i]);
+                                else setSelectedIndices(prev => prev.filter(idx => idx !== i));
+                            }}
+                            className="w-5 h-5 accent-brand-accent cursor-pointer"
+                        />
+                        Generate Image
+                    </label>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-8 mt-2">
+                    <div>
+                      <span className="text-xs font-semibold uppercase tracking-wider text-brand-muted">The Moment</span>
                     <blockquote className="my-3 text-lg italic border-l-2 border-brand-accent pl-4">
                       "{r.segment.quote_or_datapoint}"
                     </blockquote>
@@ -328,18 +359,21 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
+              </div>
               ))}
             </div>
           </section>
         )}
 
         {/* Phase 3: Final Execution Images */}
-        {finalImages.length > 0 && (
+        {finalImages.some(url => url) && (
           <section>
             <h2 className="text-2xl font-semibold mb-6">Generated Assets</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {finalImages.map((url, i) => (
-                <div key={i} className="card p-4 overflow-hidden bg-brand-surface flex flex-col justify-between">
+              {finalImages.map((url, i) => {
+                if (!url) return null;
+                return (
+                  <div key={i} className="card p-4 overflow-hidden bg-brand-surface flex flex-col justify-between">
                   <div>
                     <div className="relative mb-3">
                       <img src={url} alt={`Generated Visual ${i}`} className="w-full h-auto rounded-lg object-cover" />
@@ -409,12 +443,13 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
             <div className="mt-12 text-center">
               <button 
                 className="btn-secondary"
-                onClick={() => { setResults([]); setFinalImages([]); setScriptText(""); }}
+                onClick={() => { setResults([]); setFinalImages([]); setScriptText(""); setSelectedIndices([]); }}
               >
                 Start New Script
               </button>

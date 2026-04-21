@@ -16,11 +16,11 @@ Return a strict JSON object with:
 
 ## Rules & Constraints
 1. Provide only valid JSON, without any markdown formatting.
-2. The tone must remain insightful, career-focused, and tech-forward.
+2. The tone must remain insightful, career-focused, and tech-forward. Ensure the `refined_prompt` perfectly captures the true essence and relevance of the segment without being overly literal.
 3. Explicitly refine the prompt to instruct the generator to incorporate the brand colors seamlessly, while strictly adhering to the **{DESIGN_STYLE}** visual aesthetic without looking disjointed.
 4. **CRITICAL:** Image generation models cannot read hex codes well, and will literally draw the text (e.g., "#121212") on the image. You MUST translate the provided `brand_colors` hex codes into rich, natural descriptive color names (e.g., "deep midnight navy blue", "vibrant coral red") and use those names in the `refined_prompt` instead of the hex codes. Never include a "#" character in the refined prompt.
-5. Emphasize in the prompt that the final image MUST NOT contain any written text, letters, typography, or numbers. If the concept is an "infographic" or "chart", you MUST explicitly rewrite the prompt to be "purely symbolic and abstract without any text labels or gibberish". Remove any instructions that tell the AI to "write" or "include the word X".
-6. Enhance the prompt to ensure the output is visually engaging, dynamic, and premium, avoiding overly simplistic or bare designs, ensuring the visual perfectly represents the {DESIGN_STYLE} style.
+5. **ABSOLUTELY NO TEXT:** Emphasize in the prompt that the final image MUST NOT contain any written text, letters, typography, words, or numbers. If the concept is an "infographic" or "chart", you MUST explicitly rewrite the prompt to be "purely symbolic and abstract without any text labels or gibberish". Remove any instructions that tell the AI to "write" or "include the word X". Explicitly add "completely devoid of text, no words, no letters" to the end of the prompt.
+6. Enhance the prompt to ensure the output is visually engaging, dynamic, and premium, avoiding overly simplistic or bare designs, ensuring the visual perfectly represents the {DESIGN_STYLE} style while remaining HIGHLY RELEVANT to the core message.
 
 ## Example Output Expected
 {
