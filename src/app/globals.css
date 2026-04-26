@@ -1,33 +1,72 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-bg: #FFFFFF;
-  --color-brand-surface: #F9FAFB;
-  --color-brand-border: #E5E7EB;
-  --color-brand-text: #111827;
-  --color-brand-muted: #6B7280;
-  --color-brand-accent: #000000;
+  --color-brand-bg: #050505; /* True Dark */
+  --color-brand-surface: #0a0a0a; /* Almost Black */
+  --color-brand-border: #1f1f1f; /* Subtle Dark Border */
+  --color-brand-text: #ffffff; /* Pure White */
+  --color-brand-muted: #888888; /* Darker Gray */
+  --color-brand-accent: #ccff00; /* Neon Chartreuse/Lime */
+  --color-brand-glow: rgba(204, 255, 0, 0.15);
+  --color-brand-accent-glow: rgba(204, 255, 0, 0.8);
   
-  --font-sans: var(--font-inter), sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  
+  /* Additional colors for highlights */
+  --color-card-bg: rgba(10, 10, 10, 0.8);
+  --color-card-border: rgba(255, 255, 255, 0.08);
 }
 
 @layer base {
   body {
-    @apply bg-brand-bg text-brand-text font-sans antialiased;
+    @apply bg-brand-bg text-brand-text font-sans antialiased selection:bg-brand-accent selection:text-black;
+    background-image: 
+      radial-gradient(at top center, rgba(204,255,0,0.015) 0%, transparent 50%),
+      radial-gradient(at bottom left, rgba(204,255,0,0.01) 0%, transparent 40%);
+    background-attachment: fixed;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-brand-accent rounded-md transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply relative inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-black bg-brand-accent rounded-lg transition-all hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none font-semibold tracking-wide overflow-hidden;
   }
+  
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-brand-text bg-white border border-brand-border rounded-md transition-all hover:bg-brand-surface active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-brand-text bg-transparent border border-card-border rounded-lg transition-all hover:bg-[rgba(255,255,255,0.05)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
   }
+
   .input-field {
-    @apply block w-full px-4 py-3 text-sm bg-brand-surface border border-brand-border rounded-md focus:ring-1 focus:ring-brand-accent focus:border-brand-accent outline-none transition-all;
+    @apply block w-full px-4 py-3 text-sm bg-[rgba(255,255,255,0.03)] border border-card-border rounded-lg text-brand-text focus:ring-1 focus:ring-brand-accent focus:border-brand-accent focus:bg-[rgba(255,255,255,0.05)] outline-none transition-all placeholder:text-brand-muted/70 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)];
   }
+
   .card {
-    @apply bg-white border border-brand-border rounded-xl p-6 shadow-sm;
+    @apply bg-card-bg border border-card-border rounded-2xl p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden transition-all duration-300;
   }
+  
+  .card-glow {
+    @apply before:absolute before:inset-0 before:bg-gradient-to-br before:from-brand-glow before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500 before:rounded-2xl before:-z-10;
+  }
+
+  /* Custom scrollbar for modern feel */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-brand-border rounded-full hover:bg-brand-muted;
+  }
+}
+
+/* Add custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
 }
